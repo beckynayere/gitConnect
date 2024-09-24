@@ -5,6 +5,7 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { sendEmail } from "@/helpers/mailer";
+import jwt from "jsonwebtoken";
 
 
 connect()
@@ -22,3 +23,29 @@ export async function POST(request: NextRequest){
         if(user){
             return NextResponse.json({error: "User already exists"}, {status: 400})
         }
+
+        // hash password
+        const salt = await bcryptjs.genSalt(10)
+        const hashedPassword = await bcryptjs.hash(password, salt)
+        const validPassword = await bcryptjs.compare (password, user.password)
+        if(!validPassword){
+            return NextResponse.json({ error: "Invalid Password"}, {status : 400})
+        }
+
+        // token
+        const tokenData = {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+        // crate token 
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "Id"})
+        const response = NextResponse.json ({
+            message: "Login successfully",
+            success:"true",
+        })
+        response.cookies.set("token", token,{
+            httpOnly: true,
+        })
+        return respnse;
+    }
