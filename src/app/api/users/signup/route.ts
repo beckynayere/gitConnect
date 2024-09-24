@@ -1,9 +1,8 @@
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import bcryptjs from bcryptjs;
-import { error } from "console";
-import { hash } from "crypto";
+import bcryptjs from "bcryptjs";
+
 
 connect ()
 
@@ -25,11 +24,19 @@ export async function Post (request:NextRequest){
         (password, salt)
 
 // cret new user
-new User ({
+const newUser = new User ({
     username,
     email,
     password:hashedpassword
 })
+ const savedUser = await newUser.save()
+ console.log(savedUser);
+
+ return NextResponse.json({
+    message:"User created successfully", 
+    success:true,
+    savedUser
+    })
 
 
     } catch  (error : any) {
