@@ -26,6 +26,7 @@ export default function ProfilePage() {
         console.log(res.data);
         setData(res.data.data._id)
     }
+    
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
