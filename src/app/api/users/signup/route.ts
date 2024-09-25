@@ -37,7 +37,6 @@ const newUser = new User ({
 
   await sendEmail({email, emailType: "VERIFY", userId: savedUser._id})
 
-
  return NextResponse.json({
     message:"User created successfully", 
     success:true,
@@ -46,7 +45,7 @@ const newUser = new User ({
 
 
     } catch  (error : any) {
-        return NextResponse.json({ error: error.messag},
+        return NextResponse.json({ error: error.message},
         { status : 500})
 
     }
