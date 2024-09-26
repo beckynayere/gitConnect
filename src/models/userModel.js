@@ -1,6 +1,6 @@
-import { verify } from "crypto";
+// import { verify } from "crypto";
 import mongoose from "mongoose";
-import { type } from "os";
+// import { type } from "os";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         required: ["Please provide an email"],
         unique: true,
+        match: [/.+\@.+\..+/, "Please provide a valid email address"]
     },
     password:{
         type:String,
@@ -25,11 +26,26 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    forgotPasswordToken: String,
-    forgotPasswordTokenExpiry: Date,
-    verifyToken: String,
-    verifyTokenExpiry: Date, 
-})
+    
+    forgotPasswordToken: {
+        type: String,
+        default: null,
+    },
+    forgotPasswordTokenExpiry: {
+        type: Date,
+        default: null,
+    },
+    verifyToken: {
+        type: String,
+        default: null,
+    },
+    verifyTokenExpiry: {
+        type: Date,
+        default: null,
+    }
+}, {
+    timestamps: true,
+});
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
